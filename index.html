@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Penilaian Pelayanan</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<header>
+  <h1>Penilaian Pelayanan</h1>
+  <p>Silakan nilai kualitas pelayanan kami</p>
+</header>
+
+<div class="container" id="petugasList"></div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <img id="mFoto">
+    <h3 id="mNama"></h3>
+    <p id="mJabatan"></p>
+
+    <div class="rating">
+      <span onclick="rate(1)">★</span>
+      <span onclick="rate(2)">★</span>
+      <span onclick="rate(3)">★</span>
+      <span onclick="rate(4)">★</span>
+      <span onclick="rate(5)">★</span>
+    </div>
+
+    <textarea id="komentar" placeholder="Komentar (opsional)"></textarea>
+
+    <button onclick="kirim()">Kirim</button>
+    <button class="close" onclick="tutup()">Batal</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

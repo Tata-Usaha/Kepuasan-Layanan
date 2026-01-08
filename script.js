@@ -7,48 +7,67 @@ let nilai = 0;
 fetch(API)
   .then(res => res.json())
   .then(data => {
+    list.innerHTML = "";
     data.forEach(p => {
+      const key = `rated_${p.nama}`;
+      const sudah = localStorage.getItem(key);
+
       list.innerHTML += `
         <div class="card">
-          <img src="${p.foto}" onerror="this.src='https://i.ibb.co/4pDNDk1/user.png'">
+          <img src="${p.foto}" onerror="this.src='img/default.png'">
           <h3>${p.nama}</h3>
           <p>${p.jabatan}</p>
-          <button onclick='buka(${JSON.stringify(p)})'>Nilai</button>
+          <button ${sudah ? "disabled style='opacity:.5'" : ""} 
+            onclick='buka(${JSON.stringify(p)})'>
+            ${sudah ? "Sudah Dinilai" : "Nilai"}
+          </button>
         </div>
       `;
     });
   });
 
-function buka(p){
+function buka(p) {
   current = p;
   nilai = 0;
-  modal.style.display = "flex";
-  mFoto.src = p.foto;
-  mNama.innerText = p.nama;
-  mJabatan.innerText = p.jabatan;
-}
 
-function rate(n){
-  nilai = n;
   document.querySelectorAll(".rating span")
-    .forEach((s,i)=>s.classList.toggle("active", i < n));
+    .forEach(s => s.classList.remove("active"));
+
+  document.getElementById("mFoto").src = p.foto;
+  document.getElementById("mNama").innerText = p.nama;
+  document.getElementById("mJabatan").innerText = p.jabatan;
+  document.getElementById("komentar").value = "";
+  document.getElementById("modal").style.display = "flex";
 }
 
-function kirim(){
-  fetch(API,{
-    method:"POST",
-    body:JSON.stringify({
-      nama:current.nama,
-      jabatan:current.jabatan,
-      rating:nilai,
-      komentar:komentar.value
+function rate(n) {
+  nilai = n;
+  document.querySelectorAll(".rating span").forEach((s,i)=>{
+    s.classList.toggle("active", i < n);
+  });
+}
+
+function kirim() {
+  if (nilai === 0) {
+    alert("Pilih rating dulu ya 🙏");
+    return;
+  }
+
+  fetch(API, {
+    method: "POST",
+    body: JSON.stringify({
+      nama: current.nama,
+      jabatan: current.jabatan,
+      rating: nilai,
+      komentar: document.getElementById("komentar").value
     })
-  }).then(()=>{
-    alert("Terima kasih 🙏");
+  }).then(() => {
+    localStorage.setItem(`rated_${current.nama}`, true);
+    alert("Terima kasih atas penilaian Anda 🙏");
     location.reload();
   });
 }
 
-function tutup(){
-  modal.style.display = "none";
+function tutup() {
+  document.getElementById("modal").style.display = "none";
 }

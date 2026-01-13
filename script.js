@@ -4,29 +4,40 @@ const list = document.getElementById("petugasList");
 let current = null;
 let nilai = 0;
 
+/* ===== TANGGAL HARI INI ===== */
+function today() {
+  return new Date().toISOString().slice(0,10);
+}
+
+/* ===== LOAD DATA PETUGAS ===== */
 fetch(API)
   .then(res => res.json())
   .then(data => {
     list.innerHTML = "";
     data.forEach(p => {
-      const key = `rated_${p.nama}`;
-      const sudah = localStorage.getItem(key);
-
       list.innerHTML += `
         <div class="card">
           <img src="${p.foto}" onerror="this.src='img/default.png'">
           <h3>${p.nama}</h3>
           <p>${p.jabatan}</p>
-          <button ${sudah ? "disabled style='opacity:.5'" : ""} 
-            onclick='buka(${JSON.stringify(p)})'>
-            ${sudah ? "Sudah Dinilai" : "Nilai"}
+          <button onclick='buka(${JSON.stringify(p)})'>
+            Nilai
           </button>
         </div>
       `;
     });
   });
 
+/* ===== BUKA MODAL ===== */
 function buka(p) {
+  const last = localStorage.getItem("last_rate_date");
+  const now = today();
+
+  if (last === now) {
+  showToast("Anda sudah memberi penilaian hari ini 🙏");
+  return;
+  }
+
   current = p;
   nilai = 0;
 
@@ -40,6 +51,7 @@ function buka(p) {
   document.getElementById("modal").style.display = "flex";
 }
 
+/* ===== PILIH BINTANG ===== */
 function rate(n) {
   nilai = n;
   document.querySelectorAll(".rating span").forEach((s,i)=>{
@@ -47,9 +59,10 @@ function rate(n) {
   });
 }
 
+/* ===== KIRIM NILAI ===== */
 function kirim() {
   if (nilai === 0) {
-    alert("Pilih rating dulu ya 🙏");
+    showToast("Pilih rating dulu ya 🙏");
     return;
   }
 
@@ -62,12 +75,26 @@ function kirim() {
       komentar: document.getElementById("komentar").value
     })
   }).then(() => {
-    localStorage.setItem(`rated_${current.nama}`, true);
-    alert("Terima kasih atas penilaian Anda 🙏");
-    location.reload();
+    localStorage.setItem("last_rate_date", today());
+
+    // tampilkan toast dulu
+    showToast("Terima kasih atas penilaian Anda 🙏");
+
+    // baru reload setelah 2 detik
+    setTimeout(() => {
+      location.reload();
+    }, 2000);
   });
 }
 
+/* ===== TUTUP MODAL ===== */
 function tutup() {
   document.getElementById("modal").style.display = "none";
+}
+
+function showToast(text) {
+  const t = document.getElementById("toast");
+  t.innerText = text;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2000);
 }

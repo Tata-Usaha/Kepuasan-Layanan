@@ -12,7 +12,7 @@
   <img src="img/DIREKTORAT AKADEMIK (1).png" class="logo">
   <div>
     <h1>Penilaian Pelayanan - TATA USAHA</h1>
-    <p>Bantu kami untuk menjadi lebih baik. Kepuasan pelayanan anda, Prioritas Kami. </p>
+    <p>Bantu kami untuk menjadi lebih baik. Kepuasan pelayanan anda, Prioritas Kami.</p>
   </div>
 </header>
 
@@ -35,39 +35,41 @@
     <h3 id="mNama"></h3>
     <p id="mJabatan"></p>
 
-<div class="rating-group">
-  <p>Kualitas Layanan</p>
-  <div class="rating kualitas">
-    <span onclick="rate('kualitas',1)">★</span>
-    <span onclick="rate('kualitas',2)">★</span>
-    <span onclick="rate('kualitas',3)">★</span>
-    <span onclick="rate('kualitas',4)">★</span>
-    <span onclick="rate('kualitas',5)">★</span>
-  </div>
+    <div class="rating-group">
+      <p>Kualitas Layanan</p>
+      <div class="rating kualitas">
+        <span onclick="rate('kualitas',1)">★</span>
+        <span onclick="rate('kualitas',2)">★</span>
+        <span onclick="rate('kualitas',3)">★</span>
+        <span onclick="rate('kualitas',4)">★</span>
+        <span onclick="rate('kualitas',5)">★</span>
+      </div>
 
-  <p>Komunikasi</p>
-  <div class="rating komunikasi">
-    <span onclick="rate('komunikasi',1)">★</span>
-    <span onclick="rate('komunikasi',2)">★</span>
-    <span onclick="rate('komunikasi',3)">★</span>
-    <span onclick="rate('komunikasi',4)">★</span>
-    <span onclick="rate('komunikasi',5)">★</span>
-  </div>
+      <p>Komunikasi</p>
+      <div class="rating komunikasi">
+        <span onclick="rate('komunikasi',1)">★</span>
+        <span onclick="rate('komunikasi',2)">★</span>
+        <span onclick="rate('komunikasi',3)">★</span>
+        <span onclick="rate('komunikasi',4)">★</span>
+        <span onclick="rate('komunikasi',5)">★</span>
+      </div>
 
-  <p>Ketepatan Informasi</p>
-  <div class="rating informasi">
-    <span onclick="rate('informasi',1)">★</span>
-    <span onclick="rate('informasi',2)">★</span>
-    <span onclick="rate('informasi',3)">★</span>
-    <span onclick="rate('informasi',4)">★</span>
-    <span onclick="rate('informasi',5)">★</span>
-  </div>
-</div>
+      <p>Ketepatan Informasi</p>
+      <div class="rating informasi">
+        <span onclick="rate('informasi',1)">★</span>
+        <span onclick="rate('informasi',2)">★</span>
+        <span onclick="rate('informasi',3)">★</span>
+        <span onclick="rate('informasi',4)">★</span>
+        <span onclick="rate('informasi',5)">★</span>
+      </div>
+    </div>
 
     <textarea id="komentar" placeholder="Komentar/Saran (opsional)"></textarea>
 
-    <button onclick="kirim()">Kirim</button>
-    <button class="close" onclick="tutup()">Batal</button>
+    <div class="modal-actions">
+      <button class="kirim" onclick="kirim()">Kirim</button>
+      <button class="batal" onclick="tutup()">Batal</button>
+    </div>
   </div>
 </div>
 

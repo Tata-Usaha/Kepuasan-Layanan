@@ -102,7 +102,7 @@ body {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 3000;
+  z-index: 9999;
 }
 
 .modal-box {
@@ -115,6 +115,16 @@ body {
   animation: scaleIn .2s ease;
   position: relative;
 }
+/* FOTO DI MODAL */
+.modal-box img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  margin: 10px auto;
+}
+
 
 /* ===== RATING ===== */
 .rating-group p {
@@ -194,7 +204,7 @@ body {
   opacity: 0;
   pointer-events: none;
   transition: .3s ease;
-  z-index: 4000;
+  z-index: 3000;
 }
 
 .toast.show {
@@ -230,7 +240,7 @@ body {
   align-items: center;
   gap: 10px;
   box-shadow: 0 8px 20px rgba(0,0,0,.15);
-  z-index: 3500;
+  z-index: 2000;
   animation: float 3s ease-in-out infinite;
 }
 

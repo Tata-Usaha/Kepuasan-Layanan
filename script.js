@@ -1,4 +1,4 @@
-const API = "https://script.google.com/macros/s/AKfycbz-BdaDMKPpedfhEJM6XGy_F2752r_CFWXunEMli9fqS_l4FCKIS9wTp0_i-2Nxv2tq/exec";
+const API = "https://script.google.com/macros/s/AKfycbyhsyGRNit8N_oBs818QsyK5pUrXwwnvBvqmaEV6n-9kwMS9vU9ZvtVLMP5sspqh8Ka/exec";
 
 const list = document.getElementById("petugasList");
 let current = null;
@@ -7,14 +7,13 @@ let nilaiKualitas = 0;
 let nilaiKomunikasi = 0;
 let nilaiInformasi = 0;
 
-/* ===== TANGGAL ===== */
 function today() {
   return new Date().toISOString().slice(0,10);
 }
 
-/* ===== LOAD PETUGAS ===== */
+/* LOAD PETUGAS */
 fetch(API)
-  .then(res => res.json())
+  .then(r => r.json())
   .then(data => {
     list.innerHTML = "";
     data.forEach(p => {
@@ -23,37 +22,33 @@ fetch(API)
           <img src="${p.foto}" onerror="this.src='img/default.png'">
           <h3>${p.nama}</h3>
           <p>${p.jabatan}</p>
-          <button onclick='buka(${JSON.stringify(p)})'>Nilai</button>
+          <button onclick="buka('${p.nama}','${p.jabatan}','${p.foto}')">Nilai</button>
         </div>
       `;
     });
   });
 
-/* ===== BUKA MODAL ===== */
-function buka(p) {
+function buka(nama, jabatan, foto) {
   const last = localStorage.getItem("last_rate_date");
   const now = today();
-
   if (last === now) {
     showToast("Anda sudah menilai hari ini 🙏");
     return;
   }
 
-  current = p;
+  current = { nama, jabatan, foto };
   nilaiKualitas = 0;
   nilaiKomunikasi = 0;
   nilaiInformasi = 0;
 
   document.querySelectorAll(".rating span").forEach(s => s.classList.remove("active"));
-
-  document.getElementById("mFoto").src = p.foto;
-  document.getElementById("mNama").innerText = p.nama;
-  document.getElementById("mJabatan").innerText = p.jabatan;
+  document.getElementById("mFoto").src = foto;
+  document.getElementById("mNama").innerText = nama;
+  document.getElementById("mJabatan").innerText = jabatan;
   document.getElementById("komentar").value = "";
   document.getElementById("modal").style.display = "flex";
 }
 
-/* ===== PILIH BINTANG ===== */
 function rate(tipe, n) {
   if (tipe === "kualitas") nilaiKualitas = n;
   if (tipe === "komunikasi") nilaiKomunikasi = n;
@@ -64,8 +59,9 @@ function rate(tipe, n) {
   });
 }
 
-/* ===== KIRIM ===== */
 function kirim() {
+  if (!current) return;
+
   if (nilaiKualitas===0 || nilaiKomunikasi===0 || nilaiInformasi===0) {
     showToast("Lengkapi semua penilaian ⭐");
     return;
@@ -73,6 +69,7 @@ function kirim() {
 
   fetch(API, {
     method: "POST",
+    headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
       nama: current.nama,
       jabatan: current.jabatan,
@@ -92,7 +89,6 @@ function tutup() {
   document.getElementById("modal").style.display = "none";
 }
 
-/* ===== TOAST ===== */
 function showToast(text) {
   const t = document.getElementById("toast");
   t.innerText = text;

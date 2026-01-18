@@ -221,6 +221,23 @@ body {
 .rating span.active {
   color: #fbc02d;
 }
+.rating-group p {
+  margin: 10px 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--biru);
+}
+.rating {
+  margin-bottom: 6px;
+}
+.rating span {
+  font-size: 26px;
+  cursor: pointer;
+  color: #ddd;
+}
+.rating span.active {
+  color: #fbc02d;
+}
 
 /* ===== KOMENTAR ===== */
 .modal-box textarea {

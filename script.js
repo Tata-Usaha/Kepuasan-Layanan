@@ -2,14 +2,19 @@ const API = "https://script.google.com/macros/s/AKfycbzivYydza8C-X9eXjXPaHrJbcJH
 
 const list = document.getElementById("petugasList");
 let current = null;
-let nilai = 0;
 
-/* ===== TANGGAL HARI INI ===== */
+let nilai = {
+  kualitas: 0,
+  komunikasi: 0,
+  informasi: 0
+};
+
+/* ===== TANGGAL ===== */
 function today() {
   return new Date().toISOString().slice(0,10);
 }
 
-/* ===== LOAD DATA PETUGAS ===== */
+/* ===== LOAD PETUGAS ===== */
 fetch(API)
   .then(res => res.json())
   .then(data => {
@@ -20,9 +25,7 @@ fetch(API)
           <img src="${p.foto}" onerror="this.src='img/default.png'">
           <h3>${p.nama}</h3>
           <p>${p.jabatan}</p>
-          <button onclick='buka(${JSON.stringify(p)})'>
-            Nilai
-          </button>
+          <button onclick='buka(${JSON.stringify(p)})'>Nilai</button>
         </div>
       `;
     });
@@ -31,38 +34,36 @@ fetch(API)
 /* ===== BUKA MODAL ===== */
 function buka(p) {
   const last = localStorage.getItem("last_rate_date");
-  const now = today();
-
-  if (last === now) {
-  showToast("Anda sudah memberi penilaian hari ini 🙏");
-  return;
+  if (last === today()) {
+    showToast("Anda sudah memberi penilaian hari ini 🙏");
+    return;
   }
 
   current = p;
-  nilai = 0;
+  nilai = { kualitas:0, komunikasi:0, informasi:0 };
 
-  document.querySelectorAll(".rating span")
-    .forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".rating span").forEach(s=>s.classList.remove("active"));
 
-  document.getElementById("mFoto").src = p.foto;
-  document.getElementById("mNama").innerText = p.nama;
-  document.getElementById("mJabatan").innerText = p.jabatan;
-  document.getElementById("komentar").value = "";
-  document.getElementById("modal").style.display = "flex";
+  mFoto.src = p.foto;
+  mNama.innerText = p.nama;
+  mJabatan.innerText = p.jabatan;
+  komentar.value = "";
+  modal.style.display = "flex";
 }
 
 /* ===== PILIH BINTANG ===== */
-function rate(n) {
-  nilai = n;
-  document.querySelectorAll(".rating span").forEach((s,i)=>{
+function rate(type, n) {
+  nilai[type] = n;
+  const box = document.querySelector("." + type);
+  box.querySelectorAll("span").forEach((s,i)=>{
     s.classList.toggle("active", i < n);
   });
 }
 
-/* ===== KIRIM NILAI ===== */
+/* ===== KIRIM ===== */
 function kirim() {
-  if (nilai === 0) {
-    showToast("Pilih rating dulu ya 🙏");
+  if (!nilai.kualitas || !nilai.komunikasi || !nilai.informasi) {
+    showToast("Semua kategori wajib diisi 🙏");
     return;
   }
 
@@ -71,30 +72,27 @@ function kirim() {
     body: JSON.stringify({
       nama: current.nama,
       jabatan: current.jabatan,
-      rating: nilai,
-      komentar: document.getElementById("komentar").value
+      kualitas: nilai.kualitas,
+      komunikasi: nilai.komunikasi,
+      informasi: nilai.informasi,
+      komentar: komentar.value
     })
   }).then(() => {
     localStorage.setItem("last_rate_date", today());
-
-    // tampilkan toast dulu
     showToast("Terima kasih atas penilaian Anda 🙏");
-
-    // baru reload setelah 2 detik
-    setTimeout(() => {
-      location.reload();
-    }, 2000);
+    setTimeout(()=>location.reload(),2000);
   });
 }
 
-/* ===== TUTUP MODAL ===== */
+/* ===== TUTUP ===== */
 function tutup() {
-  document.getElementById("modal").style.display = "none";
+  modal.style.display = "none";
 }
 
+/* ===== TOAST ===== */
 function showToast(text) {
   const t = document.getElementById("toast");
   t.innerText = text;
   t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2000);
+  setTimeout(()=>t.classList.remove("show"),2000);
 }

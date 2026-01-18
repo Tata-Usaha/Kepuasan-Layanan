@@ -1,4 +1,4 @@
-const API = "https://script.google.com/macros/s/AKfycbzivYydza8C-X9eXjXPaHrJbcJH8DscG6l6e9haY5a33FRlpaGp92x5B79Q5zvU3yRD/exec";
+const API = "https://script.google.com/macros/s/AKfycbz-BdaDMKPpedfhEJM6XGy_F2752r_CFWXunEMli9fqS_l4FCKIS9wTp0_i-2Nxv2tq/exec";
 
 const list = document.getElementById("petugasList");
 let current = null;

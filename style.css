@@ -6,6 +6,7 @@
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -14,7 +15,7 @@ body {
   margin: 0;
 }
 
-/* ===== HEADER MODERN ===== */
+/* ===== HEADER ===== */
 .top-header {
   display: flex;
   align-items: center;
@@ -42,81 +43,6 @@ body {
   background: white;
   padding: 6px;
   object-fit: contain;
-}
-
-/* ===== MASKOT FLOAT ===== */
-.maskot-box {
-  position: fixed;
-  bottom: 16px;
-  right: 16px;
-  background: white;
-  border-radius: 16px;
-  padding: 10px 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  box-shadow: 0 8px 20px rgba(0,0,0,.15);
-  z-index: 1500;
-  animation: float 3s ease-in-out infinite;
-}
-
-.maskot {
-  width: 55px;
-  height: 55px;
-  object-fit: contain;
-}
-
-.maskot-text {
-  font-size: 12px;
-  color: #555;
-}
-
-.maskot-text p {
-  margin: 0;
-}
-
-.wa-btn {
-  display: inline-block;
-  margin-top: 4px;
-  background: #25D366;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.wa-btn:hover {
-  opacity: .85;
-}
-
-/* ===== ANIMASI MASKOT ===== */
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-/* ===== RESPONSIVE MOBILE ===== */
-@media (max-width: 600px) {
-  .top-header {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .maskot-box {
-    right: 10px;
-    bottom: 10px;
-    transform: scale(.9);
-  }
-
-  .card h3 {
-    font-size: 14px;
-  }
-
-  .card p {
-    font-size: 12px;
-  }
 }
 
 /* ===== GRID ===== */
@@ -176,7 +102,7 @@ body {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 3000;
 }
 
 .modal-box {
@@ -187,59 +113,36 @@ body {
   padding: 20px;
   text-align: center;
   animation: scaleIn .2s ease;
-}
-
-.modal-box img {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 10px;
-}
-
-.modal-box h3 {
-  margin: 6px 0 2px;
-}
-
-.modal-box p {
-  margin: 0;
-  font-size: 14px;
-  color: #666;
+  position: relative;
 }
 
 /* ===== RATING ===== */
-.rating {
-  margin: 12px 0;
-}
-
-.rating span {
-  font-size: 28px;
-  cursor: pointer;
-  color: #ddd;
-}
-
-.rating span.active {
-  color: #fbc02d;
-}
 .rating-group p {
   margin: 10px 0 4px;
   font-size: 14px;
   font-weight: 600;
   color: var(--biru);
 }
+
 .rating {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  user-select: none;
 }
+
 .rating span {
-  font-size: 26px;
+  font-size: 28px;
   cursor: pointer;
   color: #ddd;
+  display: inline-block;
+  padding: 2px;
+  touch-action: manipulation;
 }
+
 .rating span.active {
   color: #fbc02d;
 }
 
-/* ===== KOMENTAR ===== */
+/* ===== TEXTAREA ===== */
 .modal-box textarea {
   width: 100%;
   min-height: 80px;
@@ -250,13 +153,7 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-.modal-box textarea:focus {
-  outline: none;
-  border-color: var(--biru);
-  box-shadow: 0 0 0 2px rgba(30,58,138,.2);
-}
-
-/* ===== TOMBOL MODAL ===== */
+/* ===== BUTTON ===== */
 .modal-actions {
   display: flex;
   gap: 10px;
@@ -282,12 +179,7 @@ body {
   color: #fff;
 }
 
-/* ===== ANIMASI ===== */
-@keyframes scaleIn {
-  from { transform: scale(.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
+/* ===== TOAST ===== */
 .toast {
   position: fixed;
   top: 50%;
@@ -302,7 +194,7 @@ body {
   opacity: 0;
   pointer-events: none;
   transition: .3s ease;
-  z-index: 2000;
+  z-index: 4000;
 }
 
 .toast.show {
@@ -310,3 +202,71 @@ body {
   transform: translate(-50%, -50%) scale(1);
 }
 
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .top-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  .card h3 { font-size: 14px; }
+  .card p { font-size: 12px; }
+}
+
+/* ===== ANIMASI ===== */
+@keyframes scaleIn {
+  from { transform: scale(.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ===== MASKOT FLOAT ===== */
+.maskot-box {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: white;
+  border-radius: 16px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+  z-index: 3500;
+  animation: float 3s ease-in-out infinite;
+}
+
+.maskot {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+}
+
+.maskot-text {
+  font-size: 12px;
+  color: #555;
+}
+
+.maskot-text p {
+  margin: 0;
+}
+
+.wa-btn {
+  display: inline-block;
+  margin-top: 4px;
+  background: #25D366;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.wa-btn:hover {
+  opacity: .85;
+}
+
+/* ===== ANIMASI MASKOT ===== */
+@keyframes float {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}

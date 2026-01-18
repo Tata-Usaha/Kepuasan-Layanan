@@ -3,11 +3,9 @@ const API = "https://script.google.com/macros/s/AKfycbzivYydza8C-X9eXjXPaHrJbcJH
 const list = document.getElementById("petugasList");
 let current = null;
 
-let nilai = {
-  kualitas: 0,
-  komunikasi: 0,
-  informasi: 0
-};
+let nilaiKualitas = 0;
+let nilaiKomunikasi = 0;
+let nilaiInformasi = 0;
 
 /* ===== TANGGAL ===== */
 function today() {
@@ -34,36 +32,42 @@ fetch(API)
 /* ===== BUKA MODAL ===== */
 function buka(p) {
   const last = localStorage.getItem("last_rate_date");
-  if (last === today()) {
-    showToast("Anda sudah memberi penilaian hari ini 🙏");
+  const now = today();
+
+  if (last === now) {
+    showToast("Anda sudah menilai hari ini 🙏");
     return;
   }
 
   current = p;
-  nilai = { kualitas:0, komunikasi:0, informasi:0 };
+  nilaiKualitas = 0;
+  nilaiKomunikasi = 0;
+  nilaiInformasi = 0;
 
-  document.querySelectorAll(".rating span").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll(".rating span").forEach(s => s.classList.remove("active"));
 
-  mFoto.src = p.foto;
-  mNama.innerText = p.nama;
-  mJabatan.innerText = p.jabatan;
-  komentar.value = "";
-  modal.style.display = "flex";
+  document.getElementById("mFoto").src = p.foto;
+  document.getElementById("mNama").innerText = p.nama;
+  document.getElementById("mJabatan").innerText = p.jabatan;
+  document.getElementById("komentar").value = "";
+  document.getElementById("modal").style.display = "flex";
 }
 
 /* ===== PILIH BINTANG ===== */
-function rate(type, n) {
-  nilai[type] = n;
-  const box = document.querySelector("." + type);
-  box.querySelectorAll("span").forEach((s,i)=>{
+function rate(tipe, n) {
+  if (tipe === "kualitas") nilaiKualitas = n;
+  if (tipe === "komunikasi") nilaiKomunikasi = n;
+  if (tipe === "informasi") nilaiInformasi = n;
+
+  document.querySelectorAll(`.rating.${tipe} span`).forEach((s,i)=>{
     s.classList.toggle("active", i < n);
   });
 }
 
 /* ===== KIRIM ===== */
 function kirim() {
-  if (!nilai.kualitas || !nilai.komunikasi || !nilai.informasi) {
-    showToast("Semua kategori wajib diisi 🙏");
+  if (nilaiKualitas===0 || nilaiKomunikasi===0 || nilaiInformasi===0) {
+    showToast("Lengkapi semua penilaian ⭐");
     return;
   }
 
@@ -72,10 +76,10 @@ function kirim() {
     body: JSON.stringify({
       nama: current.nama,
       jabatan: current.jabatan,
-      kualitas: nilai.kualitas,
-      komunikasi: nilai.komunikasi,
-      informasi: nilai.informasi,
-      komentar: komentar.value
+      kualitas: nilaiKualitas,
+      komunikasi: nilaiKomunikasi,
+      informasi: nilaiInformasi,
+      komentar: document.getElementById("komentar").value
     })
   }).then(() => {
     localStorage.setItem("last_rate_date", today());
@@ -84,9 +88,8 @@ function kirim() {
   });
 }
 
-/* ===== TUTUP ===== */
 function tutup() {
-  modal.style.display = "none";
+  document.getElementById("modal").style.display = "none";
 }
 
 /* ===== TOAST ===== */

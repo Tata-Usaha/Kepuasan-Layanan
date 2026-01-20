@@ -73,6 +73,13 @@ function kirim() {
     return;
   }
 
+  // 1. Simpan tanggal dulu
+  localStorage.setItem("last_rate_date", today());
+
+  // 2. Tampilkan toast dulu
+  showToast("Terima kasih atas penilaian Anda 🙏");
+
+  // 3. Siapkan form
   const form = document.createElement("form");
   form.action = API;
   form.method = "POST";
@@ -96,12 +103,17 @@ function kirim() {
   });
 
   document.body.appendChild(form);
-  form.submit();
-  form.remove();
 
-  localStorage.setItem("last_rate_date", today());
-  showToast("Terima kasih atas penilaian Anda 🙏");
-  setTimeout(()=>location.reload(),3500);
+  // 4. Submit setelah toast sempat muncul
+  setTimeout(() => {
+    form.submit();
+    form.remove();
+  }, 600);
+
+  // 5. Reload agak lama biar user lihat toast
+  setTimeout(() => {
+    location.reload();
+  }, 3500);
 }
 
 function tutup() {

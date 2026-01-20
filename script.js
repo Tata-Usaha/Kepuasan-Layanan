@@ -1,4 +1,4 @@
-const API = "https://script.google.com/macros/s/AKfycbyhsyGRNit8N_oBs818QsyK5pUrXwwnvBvqmaEV6n-9kwMS9vU9ZvtVLMP5sspqh8Ka/exec";
+const API = "https://script.google.com/macros/s/AKfycbyU1NAIpPFOO54BZq1lX_cNt5bDvS9Q9gkjuvaoRsJXXEHYcyZvXmusoQHRz92s8Asl/exec";
 
 const list = document.getElementById("petugasList");
 let current = null;
@@ -12,21 +12,27 @@ function today() {
 }
 
 /* LOAD PETUGAS */
-fetch(API)
-  .then(r => r.json())
-  .then(data => {
-    list.innerHTML = "";
-    data.forEach(p => {
-      list.innerHTML += `
-        <div class="card">
-          <img src="${p.foto}" onerror="this.src='img/default.png'">
-          <h3>${p.nama}</h3>
-          <p>${p.jabatan}</p>
-          <button onclick="buka('${p.nama}','${p.jabatan}','${p.foto}')">Nilai</button>
-        </div>
-      `;
-    });
+function loadPetugas() {
+  const s = document.createElement("script");
+  s.src = API + "?callback=renderPetugas";
+  document.body.appendChild(s);
+}
+
+function renderPetugas(data) {
+  list.innerHTML = "";
+  data.forEach(p => {
+    list.innerHTML += `
+      <div class="card">
+        <img src="${p.foto}" onerror="this.src='img/default.png'">
+        <h3>${p.nama}</h3>
+        <p>${p.jabatan}</p>
+        <button onclick="buka('${p.nama}','${p.jabatan}','${p.foto}')">Nilai</button>
+      </div>
+    `;
   });
+}
+
+document.addEventListener("DOMContentLoaded", loadPetugas);
 
 function buka(nama, jabatan, foto) {
   const last = localStorage.getItem("last_rate_date");
@@ -67,22 +73,35 @@ function kirim() {
     return;
   }
 
-  fetch(API, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({
-      nama: current.nama,
-      jabatan: current.jabatan,
-      kualitas: nilaiKualitas,
-      komunikasi: nilaiKomunikasi,
-      informasi: nilaiInformasi,
-      komentar: document.getElementById("komentar").value
-    })
-  }).then(() => {
-    localStorage.setItem("last_rate_date", today());
-    showToast("Terima kasih atas penilaian Anda 🙏");
-    setTimeout(()=>location.reload(),2000);
+  const form = document.createElement("form");
+  form.action = API;
+  form.method = "POST";
+  form.target = "hidden_iframe";
+
+  const data = {
+    nama: current.nama,
+    jabatan: current.jabatan,
+    kualitas: nilaiKualitas,
+    komunikasi: nilaiKomunikasi,
+    informasi: nilaiInformasi,
+    komentar: document.getElementById("komentar").value
+  };
+
+  Object.keys(data).forEach(k => {
+    const i = document.createElement("input");
+    i.type = "hidden";
+    i.name = k;
+    i.value = data[k];
+    form.appendChild(i);
   });
+
+  document.body.appendChild(form);
+  form.submit();
+  form.remove();
+
+  localStorage.setItem("last_rate_date", today());
+  showToast("Terima kasih atas penilaian Anda 🙏");
+  setTimeout(()=>location.reload(),3500);
 }
 
 function tutup() {
